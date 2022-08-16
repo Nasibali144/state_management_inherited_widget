@@ -14,25 +14,12 @@ class _DetailPageState extends State<DetailPage> {
   late ProductService provider;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     provider = ProductService.of(context);
   }
 
-  void _checkProduct (value, index) {
-    provider.orders[index].isSelected = !provider.orders[index].isSelected;
-    if(provider.orders[index].isSelected) {
-      provider.addProduct(provider.orders[index]);
-    } else {
-      provider.removeProduct(provider.orders[index]);
-    }
-    setState(() {});
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +29,10 @@ class _DetailPageState extends State<DetailPage> {
         backgroundColor: Colors.white,
       ),
       body: ListView.builder(
-
-        itemCount: provider.orders.length,
+        itemCount: provider.length,
         itemBuilder: (context, index) {
-          List<Product> items = provider.orders;
+
+          List<Product> items = provider.getAllOrders();
           return ListTile(
             horizontalTitleGap: 30,
             leading: Image.network(items[index].image, height: 60, width: 60, fit: BoxFit.cover,),
@@ -53,7 +40,10 @@ class _DetailPageState extends State<DetailPage> {
             subtitle: Text("${items[index].price} so'm", style: const TextStyle(fontSize: 17.5, fontWeight: FontWeight.w600),),
             trailing: Checkbox(
               value: items[index].isSelected,
-              onChanged: (value) => _checkProduct(value, index),
+              onChanged: (value) {
+                provider.onChange(items[index]);
+                setState(() {});
+              },
             ),
           );
         },

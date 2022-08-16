@@ -1,3 +1,5 @@
+// TODO: I. Create Model For This App
+
 class Product {
   String id;
   String name;
